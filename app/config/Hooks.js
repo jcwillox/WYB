@@ -15,8 +15,8 @@ export function useAuthStatus() {
 }
 
 /**
- * @param initialState {User}
- * @return {User}
+ * @param initialState {User | null}
+ * @return {User | null}
  * */
 export function useUserData(initialState) {
   const [userData, setUserData] = useState(initialState);

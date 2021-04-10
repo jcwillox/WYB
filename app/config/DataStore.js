@@ -1,5 +1,39 @@
 import { v4 as uuid4 } from "uuid";
 
+/**
+ * User type definition
+ * @typedef User
+ * @type {Object}
+ * @property {string} uuid
+ * @property {string} email
+ * @property {string} name
+ * @property {string} password
+ * @property {string} [image]
+ */
+
+/**
+ * Place type definition
+ * @typedef Place
+ * @type {Object}
+ * @property {string} uuid
+ * @property {string} userUUID
+ * @property {string} name
+ * @property {any} [image]
+ * @property {string} [image.uri]
+ * @property {string} [category]
+ * @property {number} [rating]
+ */
+
+/**
+ * Category type definition
+ * @typedef Category
+ * @type {Object}
+ * @property {string} name
+ * @property {string} [icon]
+ * @property {string} [color]
+ */
+
+/** @type {Array.<User>} */
 const users = [
   {
     uuid: "5bbe2111-a546-4429-bd2f-a8f03b873405",
@@ -49,71 +83,29 @@ let places = [
   },
 ];
 
-/**
- * @typedef Category
- * @type {Object}
- * @property {string} name
- * @property {string} [icon]
- * @property {string} [color]
- * */
-
 /** @type {Array.<Category>} */
 let categories = [
-  {
-    name: "Shopping",
-  },
-  {
-    name: "Restaurants",
-  },
-  {
-    name: "Hotels",
-  },
+  { name: "Shopping" },
+  { name: "Restaurants" },
+  { name: "Hotels" },
 ];
 
-// restaurants
-// hotels
-//
-
-// /** @param fields {{image, password: string, name: string, uuid: string, email: string}} */
-
-class DataClass {
-  /** @param fields {Map<string, any>} */
-  static parse(fields) {
-    return Object.assign(new this(), fields);
-  }
-}
-
-class User extends DataClass {
-  uuid;
-  email;
-  name;
-  password;
-  image;
-}
-
-class Place extends DataClass {
-  uuid;
-  userUUID;
-  name;
-  image;
-  category;
-  rating;
-}
+/** @type {User | null} */
+let currentUser;
 
 /**
  * @callback authListener
  * @param status {boolean}
- * */
+ */
+
+/** @type {Array.<authListener>} */
+let authListeners = [];
 
 /**
  * @callback userDataListener
  * @param user {User}
- * */
+ */
 
-/** @type {User} */
-let currentUser;
-/** @type {Array.<authListener>} */
-let authListeners = [];
 /** @type {Array.<userDataListener>} */
 let userDataListeners = [];
 
@@ -142,9 +134,7 @@ export default {
     },
   },
   users: {
-    /**
-     * @return User
-     */
+    /** @return User | null */
     current() {
       return currentUser;
     },
