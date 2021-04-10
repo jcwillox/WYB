@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Caption, Colors, Headline } from "react-native-paper";
+import { Caption, Colors } from "react-native-paper";
 import { SimpleLineIcons } from "@expo/vector-icons";
 
 function EmptyListView(props) {

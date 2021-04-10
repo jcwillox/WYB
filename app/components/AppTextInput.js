@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Platform } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import theme from "../themes/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
