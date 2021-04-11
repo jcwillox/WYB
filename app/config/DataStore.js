@@ -1,4 +1,10 @@
 import { v4 as uuid4 } from "uuid";
+import { Colors } from "react-native-paper";
+import defaultPlaces from "./places";
+import defaultUsers from "./users";
+import { callFuture } from "../utils/utils";
+
+/* USERS */
 
 /**
  * User type definition
@@ -11,6 +17,94 @@ import { v4 as uuid4 } from "uuid";
  * @property {string} [image]
  */
 
+/** @type {Array.<User>} */
+const users = defaultUsers();
+
+/** @type {User | null} */
+let currentUser;
+
+/**
+ * @callback userDataListener
+ * @param user {User}
+ */
+
+/** @type {Array.<userDataListener>} */
+let userDataListeners = [];
+function updateUserListeners() {
+  userDataListeners.forEach((callback) => callback(currentUser));
+}
+
+/**
+ * @callback authListener
+ * @param status {boolean}
+ */
+
+/** @type {Array.<authListener>} */
+let authListeners = [];
+function updateAuthListeners(status) {
+  authListeners.forEach((callback) => callback(status));
+}
+
+const usersStore = {
+  /** @return User | null */
+  current() {
+    return currentUser;
+  },
+  fromUUID(uuid) {
+    return users.find((user) => user.uuid === uuid);
+  },
+  fromEmail(email) {
+    return users.find((user) => user.email === email);
+  },
+  add({ email, name, password }) {
+    users.push({ uuid: uuid4(), email, name, password });
+  },
+  /** Update user details and fire callbacks */
+  edit({ email, name, password, image }) {
+    let details = { email, name, password, image };
+    for (const key in details) {
+      if (details[key]) {
+        currentUser[key] = details[key];
+      }
+    }
+    callFuture(updateUserListeners);
+  },
+
+  login({ email, password }) {
+    let user = this.fromEmail(email);
+    if (user && user.password === password) {
+      currentUser = user;
+      callFuture(updateAuthListeners, true);
+      return true;
+    }
+    return false;
+  },
+  logout() {
+    currentUser = null;
+    callFuture(updateAuthListeners, false);
+  },
+  /** @param callback {userDataListener} */
+  subscribeUserData(callback) {
+    userDataListeners.push(callback);
+    console.debug("user listeners (sub)", userDataListeners);
+    return () => {
+      userDataListeners = userDataListeners.filter((item) => item !== callback);
+      console.debug("user listeners (unsub)", userDataListeners);
+    };
+  },
+  /** @param callback {authListener} */
+  subscribeAuthStatus(callback) {
+    authListeners.push(callback);
+    console.debug("auth listeners (sub)", authListeners);
+    return () => {
+      authListeners = authListeners.filter((item) => item !== callback);
+      console.debug("auth listeners (unsub)", authListeners);
+    };
+  },
+};
+
+/* PLACES */
+
 /**
  * Place type definition
  * @typedef Place
@@ -18,11 +112,91 @@ import { v4 as uuid4 } from "uuid";
  * @property {string} uuid
  * @property {string} userUUID
  * @property {string} name
+ * @property {string} description
+ * @property {Date} created
  * @property {any} [image]
  * @property {string} [image.uri]
  * @property {string} [category]
  * @property {number} [rating]
  */
+
+/** @type {Array.<Place>} */
+let places = defaultPlaces();
+
+/**
+ * @callback placesListListener
+ * @param places {Array.<Place>}
+ */
+
+/** @type {Array.<placesListListener>} */
+let placesListListeners = [];
+function updatePlacesListeners() {
+  let places = placesStore.all();
+  placesListListeners.forEach((callback) => callback(places));
+}
+
+const placesStore = {
+  /** @param place {Place} */
+  add({ uuid, name, image, category, rating, description }) {
+    let details = { name, image, category, rating, description };
+    // if a `uuid` was specified update the
+    // record instead of adding a new one
+    if (uuid) {
+      let place = placesStore.fromUUID(uuid);
+      for (const key in details) {
+        if (details[key]) {
+          place[key] = details[key];
+        }
+      }
+    } else {
+      places.push({
+        uuid: uuid4(),
+        userUUID: currentUser.uuid,
+        ...details,
+      });
+    }
+    callFuture(updatePlacesListeners);
+  },
+  /** @param place {Place} */
+  remove(place) {
+    places = places.filter((item) => item !== place);
+    callFuture(updatePlacesListeners);
+  },
+  all() {
+    if (!currentUser) return [];
+    return places.filter((place) => place.userUUID === currentUser.uuid);
+  },
+  reset() {
+    places = defaultPlaces();
+    callFuture(updatePlacesListeners);
+  },
+  /** @param category {string | Set} */
+  byCategory(category) {
+    if (typeof category === "string") {
+      category = new Set([category]);
+    }
+    return places.filter(
+      (place) =>
+        place.userUUID === currentUser.uuid && category.has(place.category)
+    );
+  },
+  fromUUID(uuid) {
+    return places.find((place) => place.uuid === uuid);
+  },
+  /** @param callback {placesListListener} */
+  subscribePlacesList(callback) {
+    placesListListeners.push(callback);
+    console.debug("places listeners (sub)", placesListListeners);
+    return () => {
+      placesListListeners = placesListListeners.filter(
+        (item) => item !== callback
+      );
+      console.debug("places listeners (unsub)", placesListListeners);
+    };
+  },
+};
+
+/* CATEGORIES */
 
 /**
  * Category type definition
@@ -33,167 +207,24 @@ import { v4 as uuid4 } from "uuid";
  * @property {string} [color]
  */
 
-/** @type {Array.<User>} */
-const users = [
-  {
-    uuid: "5bbe2111-a546-4429-bd2f-a8f03b873405",
-    email: "1@b.c",
-    name: "User 1",
-    password: "1234",
-    image: require("../assets/user1.png"),
-  },
-  {
-    uuid: "63c410f8-e0ed-4933-b85f-a36c0a8a7acc",
-    email: "2@b.c",
-    name: "User 2",
-    password: "1234",
-    image: require("../assets/user2.png"),
-  },
-  {
-    uuid: "1c6ef043-68db-4fb1-94ae-84ccd05a2c3b",
-    email: "3@b.c",
-    name: "User 3",
-    password: "1234",
-  },
-];
-
-/** @type {Array.<Place>} */
-let places = [
-  {
-    uuid: "3aa6a532-741d-4111-b91d-aaf49c93b3fa",
-    userUUID: "5bbe2111-a546-4429-bd2f-a8f03b873405",
-    name: "Bunnings",
-    category: "Shopping",
-    image: {
-      uri:
-        "https://s3-ap-southeast-2.amazonaws.com/tud-media/assets/images/5d399e73-67d4-44be-bb43-972e23f6d4b8/5d399e73-67d4-44be-bb43-972e23f6d4b8-1280.webp",
-    },
-    rating: 5,
-  },
-  {
-    uuid: "4903dc99-14ef-4e12-b211-53b611d4b696",
-    userUUID: "5bbe2111-a546-4429-bd2f-a8f03b873405",
-    name: "Bunnings",
-    category: "Shopping",
-    image: {
-      uri:
-        "https://s3-ap-southeast-2.amazonaws.com/tud-media/assets/images/5d399e73-67d4-44be-bb43-972e23f6d4b8/5d399e73-67d4-44be-bb43-972e23f6d4b8-1280.webp",
-    },
-    rating: 2,
-  },
-];
-
 /** @type {Array.<Category>} */
 let categories = [
-  { name: "Shopping" },
-  { name: "Restaurants" },
-  { name: "Hotels" },
+  { name: "Shopping", color: Colors.amber800 },
+  { name: "Restaurants", color: Colors.green600 },
+  { name: "Hotels", color: Colors.cyan600 },
 ];
 
-/** @type {User | null} */
-let currentUser;
-
-/**
- * @callback authListener
- * @param status {boolean}
- */
-
-/** @type {Array.<authListener>} */
-let authListeners = [];
-
-/**
- * @callback userDataListener
- * @param user {User}
- */
-
-/** @type {Array.<userDataListener>} */
-let userDataListeners = [];
+const categoriesStore = {
+  all() {
+    return categories;
+  },
+  byName(name) {
+    return categories.find((category) => category.name === name);
+  },
+};
 
 export default {
-  places: {
-    /** @param place {Place} */
-    add(place) {
-      places.push(place);
-    },
-    /** @param place {Place} */
-    remove(place) {
-      places = places.filter((item) => item !== place);
-    },
-    all() {
-      return places.filter((place) => place.userUUID === currentUser.uuid);
-    },
-    /** @param category {string | Set} */
-    byCategory(category) {
-      if (typeof category === "string") {
-        category = new Set([category]);
-      }
-      return places.filter(
-        (place) =>
-          place.userUUID === currentUser.uuid && category.has(place.category)
-      );
-    },
-  },
-  users: {
-    /** @return User | null */
-    current() {
-      return currentUser;
-    },
-    fromUUID(uuid) {
-      return users.find((user) => user.uuid === uuid);
-    },
-    fromEmail(email) {
-      return users.find((user) => user.email === email);
-    },
-    add({ email, name, password }) {
-      users.push({ uuid: uuid4(), email, name, password });
-    },
-    /** Update user details and fire callbacks */
-    edit({ email, name, password, image }) {
-      let details = { email, name, password, image };
-      console.log(details);
-      for (const key in details) {
-        if (details[key]) currentUser[key] = details[key];
-      }
-      setTimeout(() => {
-        userDataListeners.forEach((callback) => callback(currentUser));
-      }, 0);
-      console.log("Current", currentUser);
-      console.log("Users", users);
-    },
-    /** @param callback {userDataListener} */
-    subscribeUserData(callback) {
-      userDataListeners.push(callback);
-      console.log("user listeners (sub)", userDataListeners);
-      return () => {
-        userDataListeners = userDataListeners.filter(
-          (item) => item !== callback
-        );
-        console.log("user listeners (unsub)", userDataListeners);
-      };
-    },
-    login({ email, password }) {
-      let user = this.fromEmail(email);
-      if (user && user.password === password) {
-        currentUser = user;
-        // run this in the future to allow the calling function to complete it's cleanup
-        setTimeout(() => {
-          authListeners.forEach((callback) => callback(true));
-        }, 0);
-        return true;
-      }
-      return false;
-    },
-    logout() {
-      currentUser = null;
-      authListeners.forEach((callback) => callback(false));
-    },
-    subscribeAuthStatus(callback) {
-      authListeners.push(callback);
-      console.log("auth listeners (sub)", authListeners);
-      return () => {
-        authListeners = authListeners.filter((item) => item !== callback);
-        console.log("auth listeners (unsub)", authListeners);
-      };
-    },
-  },
+  categories: categoriesStore,
+  places: placesStore,
+  users: usersStore,
 };
