@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Assignment1",
-    "slug": "Assignment1",
+    "name": "Uber Deets",
+    "slug": "UberDeets",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",

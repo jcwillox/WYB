@@ -1,8 +1,9 @@
+import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
-import { Platform, StyleSheet } from "react-native";
+import { Platform } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
-import theme from "./app/themes/theme";
+import theme from "./app/config/theme";
 import DataStore from "./app/config/DataStore";
 import AuthStack from "./app/navigation/AuthStack";
 import MainStack from "./app/navigation/MainStack";
@@ -10,8 +11,6 @@ import { useAuthStatus } from "./app/config/Hooks";
 
 export default function App() {
   const isLoggedIn = useAuthStatus();
-  DataStore.users.login({ email: "1@b.c", password: "1234" });
-  console.log("Theme", theme);
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
@@ -28,12 +27,3 @@ if (Platform.OS === "web") {
   style.textContent = `textarea, select, input, button { outline: none!important; }`;
   document.head.append(style);
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
