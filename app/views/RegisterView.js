@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { Formik } from "formik";
 import DataStore from "../config/DataStore";
 import * as Yup from "yup";
@@ -10,10 +10,17 @@ const schema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
   name: Yup.string().required().label("Name"),
   password: Yup.string().required().min(4).max(56).label("Password"),
-  confirmPassword: Yup.string().required().min(4).max(56).label("Password"),
+  confirmPassword: Yup.string()
+    .required()
+    .min(4)
+    .max(56)
+    .test("passwords-match", "Passwords do not match", function (value) {
+      return this.parent.password === value;
+    })
+    .label("Confirm Password"),
 });
 
-function RegisterView({ navigation }) {
+function RegisterView() {
   return (
     <View style={styles.container}>
       <Formik
@@ -24,8 +31,11 @@ function RegisterView({ navigation }) {
           confirmPassword: "",
         }}
         validationSchema={schema}
-        onSubmit={(values, { ResetForm }) => {
-          // TODO check email is unique
+        onSubmit={(values) => {
+          if (DataStore.users.fromEmail(values.email)) {
+            alert("A user with this email already exists!");
+            return;
+          }
           DataStore.users.add(values);
           DataStore.users.login(values);
         }}
@@ -34,8 +44,6 @@ function RegisterView({ navigation }) {
           values,
           handleChange,
           handleSubmit,
-          setFieldValue,
-          handleReset,
           errors,
           handleBlur,
           touched,
@@ -77,13 +85,11 @@ function RegisterView({ navigation }) {
               field="confirmPassword"
               formik={{ values, errors, touched, handleBlur, handleChange }}
             />
-            <Button
-              mode="outlined"
-              onPress={handleSubmit}
-              // disabled={Object.keys(errors).length !== 0}
-            >
-              Register
-            </Button>
+            <View style={styles.button}>
+              <Button mode="contained" onPress={handleSubmit}>
+                Register
+              </Button>
+            </View>
           </>
         )}
       </Formik>
@@ -95,8 +101,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "stretch",
-    // justifyContent: "center",
-    padding: 16,
+    paddingHorizontal: 8,
+    paddingBottom: 8,
+    paddingTop: 2,
+  },
+  button: {
+    flexGrow: 1,
+    marginTop: 8,
+    justifyContent: "flex-end",
   },
 });
 

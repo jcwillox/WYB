@@ -2,12 +2,13 @@ import React from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import ProfileView from "../views/ProfileView";
 import MaterialCommunityIcon from "react-native-paper/src/components/MaterialCommunityIcon";
-import { Appbar, Avatar } from "react-native-paper";
-import LightTheme from "../themes/theme";
+import { Avatar } from "react-native-paper";
+import LightTheme from "../config/theme";
 import DataStore from "../config/DataStore";
 import PlacesView from "../views/PlacesView";
 import AddPlaceView from "../views/AddPlaceView";
 import { useUserData } from "../config/Hooks";
+import AppHeader from "../components/AppHeader";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -16,50 +17,45 @@ function MainStack() {
 
   return (
     <>
-      <Appbar.Header>
-        <Appbar.Content title="Uber Deets" />
-      </Appbar.Header>
-      <Tab.Navigator initialRouteName="Profile" shifting={true}>
+      <AppHeader />
+      <Tab.Navigator
+        initialRouteName="Profile"
+        shifting={true}
+        barStyle={{ backgroundColor: LightTheme.colors.surface }}
+        activeColor={LightTheme.colors.primary}
+      >
         <Tab.Screen
           name="Places"
           component={PlacesView}
           options={{
-            tabBarIcon: () => (
+            tabBarIcon: (props) => (
               <MaterialCommunityIcon
                 name="format-list-bulleted"
                 size={24}
-                color="white"
+                {...props}
               />
             ),
-            tabBarColor: LightTheme.colors.listing,
           }}
         />
         <Tab.Screen
           name="Add"
           component={AddPlaceView}
           options={{
-            tabBarIcon: () => (
-              <MaterialCommunityIcon name="plus" size={24} color="white" />
+            tabBarIcon: (props) => (
+              <MaterialCommunityIcon name="plus" size={24} {...props} />
             ),
-            tabBarColor: LightTheme.colors.account,
           }}
         />
-        {console.log("Theme", LightTheme)}
         <Tab.Screen
           name="Profile"
           component={ProfileView}
           options={{
-            tabBarIcon: () =>
+            tabBarIcon: (props) =>
               user.image ? (
-                <Avatar.Image
-                  source={user.image}
-                  size={24}
-                  style={{ backgroundColor: "white" }}
-                />
+                <Avatar.Image source={user.image} size={24} {...props} />
               ) : (
-                <MaterialCommunityIcon name="account" size={24} color="white" />
+                <MaterialCommunityIcon name="account" size={24} {...props} />
               ),
-            tabBarColor: LightTheme.colors.primary,
           }}
         />
       </Tab.Navigator>

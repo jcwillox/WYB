@@ -6,16 +6,14 @@ function FormTextInput({ formik, field, icon, ...props }) {
   return (
     <>
       <TextInput
-        left={<TextInput.Icon name={icon} />}
+        left={icon && <TextInput.Icon name={icon} />}
         error={hasError}
         value={formik.values[field]}
         onBlur={formik.handleBlur(field)}
         onChangeText={formik.handleChange(field)}
         {...props}
       />
-      <HelperText type="error" visible={hasError}>
-        {formik.errors[field]}
-      </HelperText>
+      {hasError && <HelperText type="error">{formik.errors[field]}</HelperText>}
     </>
   );
 }

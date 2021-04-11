@@ -1,27 +1,30 @@
-import React, { useEffect } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import DataStore from "../config/DataStore";
 import {
   Avatar,
   Card,
-  Colors,
   Divider,
   IconButton,
   List,
+  Menu,
   Text,
 } from "react-native-paper";
-import LightTheme from "../themes/theme";
-import { useUserData } from "../config/Hooks";
+import LightTheme from "../config/theme";
+import { usePlacesList, useUserData } from "../config/Hooks";
 import StarGroup from "../components/StarGroup";
 import * as ImagePicker from "expo-image-picker";
 
-function ProfileView(props) {
+function ProfileView({ navigation }) {
   const user = useUserData(DataStore.users.current());
-  const places = DataStore.places.all();
+  const places = usePlacesList(DataStore.places.all());
+
+  const [menuVisible, setMenuVisible] = useState(false);
+  const showMenu = () => setMenuVisible(true);
+  const hideMenu = () => setMenuVisible(false);
 
   const updateProfilePicture = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
     if (permissionResult.granted === false) {
       alert(
         "Permission to access photos is required to update your profile picture!"
@@ -30,9 +33,9 @@ function ProfileView(props) {
     }
 
     let result = await ImagePicker.launchImageLibraryAsync();
-    console.log(result);
-
-    if (!result.cancelled) DataStore.users.edit({ image: { uri: result.uri } });
+    if (!result.cancelled) {
+      DataStore.users.edit({ image: { uri: result.uri } });
+    }
   };
 
   return (
@@ -45,26 +48,38 @@ function ProfileView(props) {
             <Avatar.Image
               source={user.image}
               {...props}
-              style={[props.style, { backgroundColor: Colors.grey100 }]}
+              style={[
+                props.style,
+                { backgroundColor: LightTheme.colors.lightGrey },
+              ]}
             />
           ) : (
             <Avatar.Icon icon="account" {...props} />
           )
         }
         right={(props) => (
-          <View style={{ flexDirection: "row" }}>
-            {/*<IconButton*/}
-            {/*  icon="pencil-outline"*/}
-            {/*  color={LightTheme.colors.account}*/}
-            {/*  {...props}*/}
-            {/*  onPress={() => DataStore.users.logout()}*/}
-            {/*/>*/}
-            <IconButton
-              icon="dots-vertical"
-              {...props}
-              onPress={updateProfilePicture}
+          <Menu
+            visible={menuVisible}
+            onDismiss={hideMenu}
+            anchor={
+              <IconButton icon="dots-vertical" {...props} onPress={showMenu} />
+            }
+          >
+            <Menu.Item
+              onPress={() => {
+                hideMenu();
+                updateProfilePicture();
+              }}
+              title="Change Picture"
+              icon="face-profile"
             />
-          </View>
+            <Divider />
+            <Menu.Item
+              onPress={() => DataStore.users.logout()}
+              title="Logout"
+              icon="logout-variant"
+            />
+          </Menu>
         )}
         rightStyle={{ marginRight: 12 }}
       />
@@ -95,11 +110,10 @@ function ProfileView(props) {
           )}
           right={(props) => (
             <StarGroup
-              initialRating={
+              rating={
                 places.reduce((a, b) => a + (b.rating || 0), 0) / places.length
               }
               size={24}
-              editable
               style={{ marginRight: 8 }}
             />
           )}
@@ -113,9 +127,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: LightTheme.colors.surface,
-    // flexDirection: "row",
-    // alignItems: "space-around",
-    // justifyContent: "space-around",
   },
 });
 

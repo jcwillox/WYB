@@ -1,12 +1,17 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Caption, Colors } from "react-native-paper";
+import { Caption } from "react-native-paper";
 import { SimpleLineIcons } from "@expo/vector-icons";
+import LightTheme from "../config/theme";
 
-function EmptyListView(props) {
+function EmptyListView() {
   return (
     <View style={styles.container}>
-      <SimpleLineIcons name="ghost" size={72} color={Colors.grey400} />
+      <SimpleLineIcons
+        name="ghost"
+        size={72}
+        color={LightTheme.colors.mediumGrey}
+      />
       <Caption>Empty Category</Caption>
     </View>
   );

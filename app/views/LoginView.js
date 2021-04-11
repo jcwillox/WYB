@@ -15,41 +15,18 @@ function LoginView({ navigation }) {
   return (
     <View style={styles.container}>
       <Formik
-        initialValues={{ email: "1@b.c", password: "1234" }} // email: "1@b.c", password: "1234"
+        initialValues={{ email: "", password: "" }}
         validationSchema={schema}
-        onSubmit={(values, { resetForm }) => {
+        onSubmit={(values) => {
           if (!DataStore.users.login(values)) {
             alert("Invalid username/password!");
           }
-          // if(validateUser(values)){
-          //     resetForm();
-          //     createUser(values);
-          //     navigation.navigate("Home", {
-          //             screen: "Home",
-          //             params:{
-          //                 screen:"Home",
-          //                 params:{
-          //                     paramEmail: values.email,
-          //                     paramName: getUser(values).name,
-          //                     paramImage: getUser(values).image,
-          //                 },
-          //             }
-          //         }
-          //         );
-          // }
-          // else{
-          //     resetForm();
-          //     alert("Invalid Login Details")
-          // }
-          console.log("Submit", values);
         }}
       >
         {({
           values,
           handleChange,
           handleSubmit,
-          setFieldValue,
-          handleReset,
           errors,
           handleBlur,
           touched,
@@ -73,13 +50,11 @@ function LoginView({ navigation }) {
               field="password"
               formik={{ values, errors, touched, handleBlur, handleChange }}
             />
-            <Button
-              mode="outlined"
-              onPress={handleSubmit}
-              // disabled={Object.keys(errors).length !== 0}
-            >
-              Login
-            </Button>
+            <View style={styles.button}>
+              <Button mode="contained" onPress={handleSubmit}>
+                Login
+              </Button>
+            </View>
           </>
         )}
       </Formik>
@@ -91,9 +66,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "stretch",
-    // alignSelf: "stretch",
-    // justifyContent: "center",
-    padding: 16,
+    paddingHorizontal: 8,
+    paddingBottom: 8,
+    paddingTop: 2,
+  },
+  button: {
+    flexGrow: 1,
+    marginTop: 8,
+    justifyContent: "flex-end",
   },
 });
 

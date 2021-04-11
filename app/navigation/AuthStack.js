@@ -1,4 +1,4 @@
-import NavBar from "../components/NavBar";
+import AppHeader from "../components/AppHeader";
 import WelcomeView from "../views/WelcomeView";
 import LoginView from "../views/LoginView";
 import RegisterView from "../views/RegisterView";
@@ -12,13 +12,13 @@ function AuthStack() {
     <Stack.Navigator
       initialRouteName="Welcome"
       screenOptions={{
-        header: (props) => <NavBar {...props} />,
+        header: (props) => <AppHeader {...props} />,
       }}
     >
       <Stack.Screen
         name="Welcome"
         component={WelcomeView}
-        options={{ title: "Uber Deets" }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen name="Login" component={LoginView} />
       <Stack.Screen name="Register" component={RegisterView} />

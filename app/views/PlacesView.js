@@ -1,74 +1,75 @@
 import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import DataStore from "../config/DataStore";
-import { Avatar, Card, Chip, Divider, Surface } from "react-native-paper";
+import { Modal, Portal, Surface } from "react-native-paper";
 import ChipGroup from "../components/ChipGroup";
-import StarGroup from "../components/StarGroup";
 import EmptyListView from "./EmptyListView";
+import { usePlacesList } from "../config/Hooks";
+import SwipeableItem from "../components/SwipeableItem";
+import PlaceDetailView from "./PlaceDetailView";
 
-function PlacesView(props) {
-  const [places, setPlaces] = useState(DataStore.places.all());
-  console.log("Places", places);
+function PlacesView({ navigation }) {
+  const categories = DataStore.categories.all();
+  const places = usePlacesList(DataStore.places.all());
+  const [detailModelVisible, setDetailModelVisible] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState(new Set());
+
+  const filteredPlaces =
+    (selectedCategories.size !== 0 &&
+      places.filter((place) => selectedCategories.has(place.category))) ||
+    places;
+
+  // useEffect(() => {
+  //   setRating(rating);
+  // }, [places]);
+
+  const showDetailModel = (place) => {
+    setSelectedPlace(place);
+    setDetailModelVisible(true);
+  };
+  const hideDetailModel = () => {
+    setDetailModelVisible(false);
+  };
 
   /** @param item {Place} */
   const renderItem = ({ item }) => (
-    <Card
-      // theme={{ roundness: 0 }}
-      style={{ marginHorizontal: 8, marginTop: 8 }}
-    >
-      <Card.Cover source={item.image} />
-      <Card.Title
-        title={item.name}
-        subtitle={item.category}
-        // left={(props) => (
-        //   <Avatar.Image
-        //     source={item.image}
-        //     {...props}
-        //     style={{ backgroundColor: "transparent" }}
-        //   />
-        // )}
-        right={(props) => <StarGroup initialRating={4} {...props} />}
-        rightStyle={{ marginRight: 12 }}
-      />
-
-      {/*<Chip {...props}>{item.category}</Chip>*/}
-    </Card>
+    <SwipeableItem
+      navigation={navigation}
+      item={item}
+      showDetailModel={showDetailModel}
+    />
   );
-
-  /** @param selected {Set} */
-  const updatePlaces = (selected) => {
-    if (selected.size === 0) {
-      setPlaces(DataStore.places.all());
-    } else {
-      setPlaces(DataStore.places.byCategory(selected));
-    }
-    console.log(places);
-  };
 
   return (
     <View style={styles.container}>
-      {/*<View*/}
-      {/*  style={{*/}
-      {/*    flexDirection: "row",*/}
-      {/*    alignItems: "center",*/}
-      {/*    justifyContent: "center",*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  <View style={{ flex: 1, maxWidth: 400, flexDirection: "row" }}>*/}
+      <Portal>
+        <Modal
+          visible={detailModelVisible}
+          onDismiss={hideDetailModel}
+          style={styles.modal}
+        >
+          {selectedPlace && (
+            <PlaceDetailView
+              navigation={navigation}
+              place={selectedPlace}
+              hideDetailModel={hideDetailModel}
+            />
+          )}
+        </Modal>
+      </Portal>
       <FlatList
-        data={places}
+        data={filteredPlaces}
         renderItem={renderItem}
         keyExtractor={(item) => item.uuid}
         ListEmptyComponent={EmptyListView}
-        contentContainerStyle={{ flexGrow: 1 }}
-        // ItemSeparatorComponent={Divider}
+        contentContainerStyle={styles.listContainer}
       />
-      {/*</View>*/}
-      {/*</View>*/}
       <Surface style={styles.chipGroup}>
         <ChipGroup
-          items={["Shopping", "Restaurants", "Hotels"]}
-          onSelectedChange={updatePlaces}
+          multiselect
+          items={categories}
+          onSelectedChange={(selected) => setSelectedCategories(selected)}
         />
       </Surface>
     </View>
@@ -82,6 +83,13 @@ const styles = StyleSheet.create({
   },
   chipGroup: {
     paddingVertical: 8,
+  },
+  listContainer: {
+    flexGrow: 1,
+    paddingBottom: 8,
+  },
+  modal: {
+    padding: 20,
   },
 });
 

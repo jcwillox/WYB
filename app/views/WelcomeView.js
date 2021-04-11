@@ -1,30 +1,23 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, Subheading, Title } from "react-native-paper";
+import { FAB, Title } from "react-native-paper";
+import * as details from "../../app.json";
 
 function WelcomeView({ navigation }) {
   return (
     <View style={styles.container}>
-      <Title style={styles.text}>Uber Deets</Title>
-      <Subheading style={styles.text}>{}</Subheading>
+      <Title style={styles.text}>{details.expo.name}</Title>
       <View>
-        <Button
-          mode="outlined"
-          onPress={() => {
-            navigation.navigate("Login");
-          }}
-          style={{ marginBottom: 16, width: 200 }}
-        >
-          Login
-        </Button>
-        <Button
-          mode="outlined"
-          onPress={() => {
-            navigation.navigate("Register");
-          }}
-        >
-          Register
-        </Button>
+        <FAB
+          style={[styles.fab, styles.loginFab]}
+          label="Login"
+          onPress={() => navigation.navigate("Login")}
+        />
+        <FAB
+          style={styles.fab}
+          label="Register"
+          onPress={() => navigation.navigate("Register")}
+        />
       </View>
     </View>
   );
@@ -37,12 +30,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   text: {
-    // fontWeight: "400",
-    // textTransform: "uppercase",
     fontSize: 24,
   },
-  titleIcon: {
-    marginTop: 8,
+  fab: {
+    width: 250,
+  },
+  loginFab: {
+    marginBottom: 24,
   },
 });
 
