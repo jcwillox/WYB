@@ -33,6 +33,7 @@ function SwipeableItem({ navigation, item, showDetailModel }) {
   return (
     <SwipeableWrapper
       innerRef={(ref) => (reference = ref)}
+      containerStyle={styles.swipeable}
       renderRightActions={() => (
         <View style={styles.container}>
           <IconButton
@@ -77,12 +78,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginRight: 8,
   },
+  swipeable: {
+    // prevent swipeable from cutting off drop shadows
+    overflow: "visible",
+  },
   card: {
     marginHorizontal: 8,
     marginTop: 8,
   },
   starGroup: {
     marginRight: 12,
+    marginLeft: 12,
   },
 });
 

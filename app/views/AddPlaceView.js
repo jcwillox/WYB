@@ -89,24 +89,24 @@ function AddPlaceView({ route, navigation }) {
                 setFieldTouched,
               }}
             />
+            <View style={styles.starGroup}>
+              <StarGroup
+                size={24}
+                editable
+                rating={values.rating}
+                onRatingChange={(rating) => setFieldValue("rating", rating)}
+              />
+            </View>
+            <View style={styles.chipGroup}>
+              <ChipGroup
+                items={categories}
+                selected={new Set([values.category])}
+                onSelectedChange={(selected) =>
+                  setFieldValue("category", selected)
+                }
+              />
+            </View>
             <View style={styles.formInner}>
-              <View style={styles.starGroup}>
-                <StarGroup
-                  size={24}
-                  editable
-                  rating={values.rating}
-                  onRatingChange={(rating) => setFieldValue("rating", rating)}
-                />
-              </View>
-              <View style={styles.chipGroup}>
-                <ChipGroup
-                  items={categories}
-                  selected={new Set([values.category])}
-                  onSelectedChange={(selected) =>
-                    setFieldValue("category", selected)
-                  }
-                />
-              </View>
               <FormTextInput
                 label="Name"
                 mode="outlined"

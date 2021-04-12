@@ -12,7 +12,7 @@ function EmptyListView() {
         size={72}
         color={LightTheme.colors.mediumGrey}
       />
-      <Caption>Empty Category</Caption>
+      <Caption>Empty Selection</Caption>
     </View>
   );
 }

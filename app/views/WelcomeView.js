@@ -1,12 +1,15 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { FAB, Title } from "react-native-paper";
+import { Caption, FAB, Title } from "react-native-paper";
 import * as details from "../../app.json";
 
 function WelcomeView({ navigation }) {
   return (
     <View style={styles.container}>
-      <Title style={styles.text}>{details.expo.name}</Title>
+      <View style={styles.titleGroup}>
+        <Title style={styles.text}>{details.expo.name}.</Title>
+        <Caption style={styles.caption}>WYB</Caption>
+      </View>
       <View>
         <FAB
           style={[styles.fab, styles.loginFab]}
@@ -29,11 +32,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
   },
+  titleGroup: {
+    alignItems: "center",
+  },
   text: {
-    fontSize: 24,
+    fontSize: 28,
+  },
+  caption: {
+    fontSize: 18,
+    marginTop: 8,
   },
   fab: {
-    width: 250,
+    width: 200,
   },
   loginFab: {
     marginBottom: 24,

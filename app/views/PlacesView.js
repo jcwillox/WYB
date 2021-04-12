@@ -20,10 +20,6 @@ function PlacesView({ navigation }) {
       places.filter((place) => selectedCategories.has(place.category))) ||
     places;
 
-  // useEffect(() => {
-  //   setRating(rating);
-  // }, [places]);
-
   const showDetailModel = (place) => {
     setSelectedPlace(place);
     setDetailModelVisible(true);
@@ -82,7 +78,8 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
   },
   chipGroup: {
-    paddingVertical: 8,
+    // paddingVertical: 8,
+    padding: 8,
   },
   listContainer: {
     flexGrow: 1,

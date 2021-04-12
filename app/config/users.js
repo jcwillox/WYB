@@ -2,22 +2,22 @@
 const users = [
   {
     uuid: "5bbe2111-a546-4429-bd2f-a8f03b873405",
-    email: "1@b.c",
-    name: "User 1",
+    email: "sarah@mail.com",
+    name: "Sarah Mobsby",
     password: "1234",
-    image: require("../assets/user1.png"),
+    image: require("../assets/user1.jpg"),
   },
   {
     uuid: "63c410f8-e0ed-4933-b85f-a36c0a8a7acc",
-    email: "2@b.c",
-    name: "User 2",
+    email: "katie@mail.com",
+    name: "Katie McCubbin",
     password: "1234",
-    image: require("../assets/user2.png"),
+    image: require("../assets/user2.jpg"),
   },
   {
     uuid: "1c6ef043-68db-4fb1-94ae-84ccd05a2c3b",
-    email: "3@b.c",
-    name: "User 3",
+    email: "justin@mail.com",
+    name: "Justin Parkhill",
     password: "1234",
   },
 ];

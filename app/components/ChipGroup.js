@@ -41,11 +41,14 @@ function ChipGroup({ items, multiselect, selected, onSelectedChange }) {
     }
   };
 
-  /** @param item {Category} */
-  const renderItem = ({ item }) => (
+  /**
+   * @param item {Category}
+   * @param index {number}
+   */
+  const renderItem = ({ item, index }) => (
     <Chip
       mode="outlined"
-      style={styles.chip}
+      style={index !== items.length - 1 && styles.chip}
       onPress={() => handleSelected(item.name)}
       selected={internalSelected.has(item.name)}
       selectedColor={item.color}
@@ -68,7 +71,7 @@ function ChipGroup({ items, multiselect, selected, onSelectedChange }) {
 
 const styles = StyleSheet.create({
   chip: {
-    marginLeft: 8,
+    marginRight: 8,
   },
 });
 

@@ -38,7 +38,7 @@ function FormImageField({ formik, field }) {
             <MaterialCommunityIcon
               name="image-plus"
               size={72}
-              color={LightTheme.colors.placeholder}
+              color={LightTheme.colors.mediumGrey}
             />
           </View>
         )}
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     height: 200,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: LightTheme.colors.background,
   },
 });
 

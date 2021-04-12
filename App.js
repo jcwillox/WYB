@@ -4,7 +4,6 @@ import React from "react";
 import { Platform } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import theme from "./app/config/theme";
-import DataStore from "./app/config/DataStore";
 import AuthStack from "./app/navigation/AuthStack";
 import MainStack from "./app/navigation/MainStack";
 import { useAuthStatus } from "./app/config/Hooks";
@@ -13,8 +12,7 @@ export default function App() {
   const isLoggedIn = useAuthStatus();
   return (
     <PaperProvider theme={theme}>
-      <NavigationContainer>
-        {console.log(DataStore.users.current())}
+      <NavigationContainer theme={theme}>
         {isLoggedIn ? <MainStack /> : <AuthStack />}
       </NavigationContainer>
     </PaperProvider>

@@ -81,25 +81,18 @@ function ProfileView({ navigation }) {
             />
           </Menu>
         )}
-        rightStyle={{ marginRight: 12 }}
+        rightStyle={styles.profileMenuButton}
       />
       <Divider />
       <List.Section title="Details">
         <List.Item
-          title="Places Been"
+          title="Places"
           left={() => (
             <List.Icon icon="map-marker" color={LightTheme.colors.primary} />
           )}
           right={(props) => (
-            <View
-              {...props}
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                marginRight: 12,
-              }}
-            >
-              <Text style={{ fontSize: 16 }}>{places.length}</Text>
+            <View {...props} style={styles.listItemValue}>
+              <Text style={styles.listItemValueText}>{places.length}</Text>
             </View>
           )}
         />
@@ -108,13 +101,13 @@ function ProfileView({ navigation }) {
           left={() => (
             <List.Icon icon="star" color={LightTheme.colors.primary} />
           )}
-          right={(props) => (
+          right={() => (
             <StarGroup
               rating={
                 places.reduce((a, b) => a + (b.rating || 0), 0) / places.length
               }
               size={24}
-              style={{ marginRight: 8 }}
+              style={styles.starGroup}
             />
           )}
         />
@@ -127,6 +120,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: LightTheme.colors.surface,
+  },
+  starGroup: {
+    marginHorizontal: 16,
+  },
+  listItemValue: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 20,
+  },
+  listItemValueText: {
+    fontSize: 16,
+  },
+  profileMenuButton: {
+    marginHorizontal: 12,
   },
 });
 

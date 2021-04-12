@@ -29,11 +29,7 @@ function MainStack() {
           component={PlacesView}
           options={{
             tabBarIcon: (props) => (
-              <MaterialCommunityIcon
-                name="format-list-bulleted"
-                size={24}
-                {...props}
-              />
+              <MaterialCommunityIcon name="airplane" size={24} {...props} />
             ),
           }}
         />
@@ -52,7 +48,12 @@ function MainStack() {
           options={{
             tabBarIcon: (props) =>
               user.image ? (
-                <Avatar.Image source={user.image} size={24} {...props} />
+                <Avatar.Image
+                  source={user.image}
+                  size={24}
+                  style={{ backgroundColor: LightTheme.colors.lightGrey }}
+                  {...props}
+                />
               ) : (
                 <MaterialCommunityIcon name="account" size={24} {...props} />
               ),

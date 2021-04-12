@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   },
   starGroup: {
     marginRight: 12,
+    marginLeft: 12,
   },
   action: {
     marginRight: 8,

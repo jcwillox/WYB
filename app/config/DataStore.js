@@ -46,6 +46,10 @@ function updateAuthListeners(status) {
 }
 
 const usersStore = {
+  /** A temporary method for debugging features */
+  all() {
+    return users;
+  },
   /** @return User | null */
   current() {
     return currentUser;
@@ -62,14 +66,12 @@ const usersStore = {
   /** Update user details and fire callbacks */
   edit({ email, name, password, image }) {
     let details = { email, name, password, image };
-    for (const key in details) {
+    for (const key in details)
       if (details[key]) {
         currentUser[key] = details[key];
       }
-    }
     callFuture(updateUserListeners);
   },
-
   login({ email, password }) {
     let user = this.fromEmail(email);
     if (user && user.password === password) {
@@ -209,7 +211,8 @@ const placesStore = {
 
 /** @type {Array.<Category>} */
 let categories = [
-  { name: "Shopping", color: Colors.amber800 },
+  { name: "Attractions", color: Colors.deepPurple500 },
+  { name: "Shops", color: Colors.amber800 },
   { name: "Restaurants", color: Colors.green600 },
   { name: "Hotels", color: Colors.cyan600 },
 ];

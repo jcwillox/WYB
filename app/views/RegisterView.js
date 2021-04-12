@@ -5,6 +5,7 @@ import { Formik } from "formik";
 import DataStore from "../config/DataStore";
 import * as Yup from "yup";
 import FormTextInput from "../components/FormTextInput";
+import LightTheme from "../config/theme";
 
 const schema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -104,6 +105,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingBottom: 8,
     paddingTop: 2,
+    backgroundColor: LightTheme.colors.surface,
   },
   button: {
     flexGrow: 1,
