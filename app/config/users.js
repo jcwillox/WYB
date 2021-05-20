@@ -23,8 +23,11 @@ const users = [
 ];
 
 /**
- * @returns {Array.<User>} a shallow clone of the default users list
+ * @returns {Array.<User>} a deep copy of the default users list
  */
 export default function defaultUsers() {
-  return [...users];
+  // return deep copy of users
+  return users.map((user) => {
+    return Object.assign({}, user);
+  });
 }

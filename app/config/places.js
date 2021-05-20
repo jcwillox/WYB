@@ -85,8 +85,11 @@ const places = [
 ];
 
 /**
- * @returns {Array.<Place>} a shallow clone of the default places list
+ * @returns {Array.<Place>} a deep copy of the default places list
  */
 export default function defaultPlaces() {
-  return [...places];
+  // return deep copy of places
+  return places.map((place) => {
+    return Object.assign({}, place);
+  });
 }
