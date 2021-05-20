@@ -1,7 +1,7 @@
 /** @type {Array.<Place>} */
 const places = [
   {
-    uuid: "bd6d226e-23cd-469a-9dbb-059227067bf4",
+    uuid: "e6c73f99-de5d-4849-848b-4c3b394aaaba",
     userUUID: "63c410f8-e0ed-4933-b85f-a36c0a8a7acc",
     name: "Mike's Pizza",
     category: "Restaurants",
@@ -11,7 +11,7 @@ const places = [
     rating: 5,
   },
   {
-    uuid: "4903dc99-14ef-4e12-b211-53b611d4b696",
+    uuid: "2a5eca97-eb5f-4ed6-8dfd-0f585937c55e",
     userUUID: "63c410f8-e0ed-4933-b85f-a36c0a8a7acc",
     name: "Mountains",
     category: "Attractions",
@@ -22,9 +22,9 @@ const places = [
     rating: 5,
   },
   {
-    uuid: "3aa6a532-741d-4111-b91d-aaf49c93b3fa",
+    uuid: "f83f4d3f-9115-4ed0-bc19-c325065e9d32",
     userUUID: "63c410f8-e0ed-4933-b85f-a36c0a8a7acc",
-    name: "Sunset ☀",
+    name: "Sunset ☀️",
     description: "This place had the best sunsets!",
     category: "Attractions",
     image: require("../assets/sunset.jpg"),
@@ -44,7 +44,7 @@ const places = [
   {
     uuid: "3aa6a532-741d-4111-b91d-aaf49c93b3fa",
     userUUID: "5bbe2111-a546-4429-bd2f-a8f03b873405",
-    name: "Sunset ☀",
+    name: "Sunset ☀️",
     description: "A beautiful sunset over at Anaheim in the US.",
     category: "Attractions",
     image: require("../assets/sunset.jpg"),
@@ -77,7 +77,7 @@ const places = [
     userUUID: "5bbe2111-a546-4429-bd2f-a8f03b873405",
     name: "Orange Cafe",
     description: "Fanciest looking coffee shop I've ever been too",
-    category: "Attractions",
+    category: "Shops",
     image: require("../assets/coffee-shop.jpg"),
     created: new Date("2020-08-02T15:56:00+11:00"),
     rating: 4,
