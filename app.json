@@ -13,18 +13,23 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jcwillox.WYB"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.jcwillox.WYB"
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
-    }
+    },
+    "description": "Where You’ve Been (Demo) is an app for storing, categorising, and rating the places you’ve been. It’s a fun way to check out all the interesting places you’ve visited. In its current implementation, it is designed to be a personal (done-)list and not shared amongst others.\n\nAll built-in accounts use the password \"1234\", the default account is \"sarah@mail.com\", there is also \"katie@mail.com\", and \"justin@mail.com\"."
   }
 }
